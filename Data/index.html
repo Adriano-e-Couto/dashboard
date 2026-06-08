@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Cobrança & Metas - Dark Mode</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #6366f1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border-color: #334155;
+        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        h1, h2 { color: #ffffff; margin: 0 0 10px 0; }
+        .live-badge { display: inline-flex; align-items: center; gap: 8px; background-color: #1e293b; border: 1px solid var(--border-color); color: #ffffff; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); transition: all 0.2s; }
+        .live-badge:hover { background-color: #334155; border-color: var(--primary); }
+        .live-dot { width: 8px; height: 8px; background-color: var(--danger); border-radius: 50%; display: inline-block; animation: pulsar 1.5s infinite; }
+        @keyframes pulsar {
+            0% { transform: scale(0.9); opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.9); opacity: 0; }
+        }
+        .update-time { font-size: 13px; color: var(--text-muted); text-align: right; margin-top: 4px; }
+        .top-sections { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid var(--border-color); }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-weight: 600; font-size: 14px; color: var(--text-muted); }
+        select, input { padding: 10px; background-color: #0f172a; border: 1px solid var(--border-color); border-radius: 6px; font-size: 16px; color: var(--text-color); }
+        select:focus, input:focus { border-color: var(--primary); outline: none; }
+        button.btn-submit { background-color: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; width: 100%; margin-top: 15px; }
+        button.btn-submit:hover { background-color: #4f46e5; }
+        .ranking-list { list-style: none; padding: 0; margin: 0; }
+        .ranking-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color); font-weight: 500; }
+        .ranking-item:first-child { color: var(--warning); font-weight: bold; font-size: 18px; }
+        .grid-colaboradores { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .colab-card { position: relative; }
+        .colab-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .colab-name { font-weight: bold; font-size: 16px; color: #ffffff; }
+        .faixa-badge { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: bold; background: #312e81; color: #c7d2fe; }
+        .progress-container { background: #0f172a; border-radius: 10px; height: 16px; width: 100%; overflow: hidden; margin: 12px 0; border: 1px solid var(--border-color); }
+        .progress-bar { background: linear-gradient(90deg, #10b981, #34d399); height: 100%; width: 0%; transition: width 0.6s ease-in-out; }
+        .valores-detalhe { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 13px; margin-top: 10px; color: var(--text-muted); }
+        .val { font-weight: bold; color: var(--text-color); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-area">
+        <div>
+            <h1>📊 Dashboard Operacional - Setor de Cobrança</h1>
+            <span style="color: var(--text-muted)">Vigência: <b>01/06/2026 a 30/06/2026</b></span>
+        </div>
+        <div>
+            <button class="live-badge" onclick="forcarAtualizacaoAoVivo()">
+                <span class="live-dot"></span> AO VIVO
+            </button>
+            <div class="update-time">Atualizado em: <span id="txt-horario-atualizacao">--:--:--</span></div>
+        </div>
+    </div>
+    <div class="top-sections">
+        <div class="card">
+            <h2>📥 Painel de Lançamento Diário</h2>
+            <form id="form-lancamento" onsubmit="salvarLancamento(event)">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div class="form-group">
+                        <label for="select-colaborador">Colaborador</label>
+                        <select id="select-colaborador" required><option value="">Selecione...</option></select>
+                      </div>
+                      <div class="form-group">
+                          <label for="select-semana">Semana de Referência</label>
+                          <select id="select-semana" required>
+                              <option value="S1">Semana 1 (S1)</option>
+                              <option value="S2">Semana 2 (S2)</option>
+                              <option value="S3">Semana 3 (S3)</option>
+                              <option value="S4">Semana 4 (S4)</option>
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <label for="input-valor">Valor Recuperado (R$)</label>
+                          <input type="number" id="input-valor" step="0.01" min="0" placeholder="Ex: 1500.00" required>
+                      </div>
+                  </div>
+                  <button type="submit" class="btn-submit">Confirmar e Atualizar Banco de Dados</button>
+              </form>
+          </div>
+          <div class="card">
+              <h2>🏆 Ranking Mensal (Top 3)</h2>
+              <ul id="lista-ranking" class="ranking-list"><li class="ranking-item" style="color:var(--text-muted)">Buscando pódio...</li></ul>
+          </div>
+      </div>
+      <h2>👥 Desempenho Individual da Equipe</h2>
+      <div id="cards-container" class="grid-colaboradores"></div>
+  </div>
+  <script>
+      const API_URL = "http://localhost:5292/api/metas/";
+      document.addEventListener("DOMContentLoaded", () => {
+          carregarDadosGerais();
+          carregarRanking();
+          setInterval(() => { carregarDadosGerais(); carregarRanking(); }, 30000);
+      });
+      function atualizarRelogioModificacao() {
+          document.getElementById("txt-horario-atualizacao").innerText = new Date().toLocaleTimeString('pt-BR');
+      }
+      function forcarAtualizacaoAoVivo() { carregarDadosGerais(); carregarRanking(); }
+      async function carregarDadosGerais() {
+          try {
+              const response = await fetch(API_URL);
+              const colaboradores = await response.json();
+              const container = document.getElementById("cards-container");
+              const select = document.getElementById("select-colaborador");
+              const valorSelecionadoAnterior = select.value;
+              // limpar conteúdo atual
+              container.innerHTML = "";
+              // preencher select
+              select.innerHTML = '<option value="">Selecione...</option>';
+              colaboradores.forEach(c => {
+                  // popular cards
+                  container.innerHTML += `
+                      <div class="card colab-card">
+                          <div class="colab-header">
+                              <span class="colab-name">${c.nomeColaborador}</span>
+                              <span class="faixa-badge">${c.faixaAtingimento}</span>
+                          </div>
+                          <div style="font-size: 14px;">Progresso Mensal: <strong style="color:var(--success)">${(c.percentualMensal||0).toFixed(1)}%</strong></div>
+                          <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(c.percentualMensal||0, 100)}%"></div></div>
+                          <div class="valores-detalhe">
+                              <div>Meta Total: <span class="val">${formatar(c.metaMensal||0)}</span></div>
+                              <div>Recuperado: <span class="val" style="color:var(--success)">${formatar(c.recuperadoMensal||0)}</span></div>
+                              <div>Falta Recuperar: <span class="val" style="color:var(--danger)">${formatar(c.quantoFalta||0)}</span></div>
+                              <div>Status S1: <span class="val">${formatar(c.recuperadoS1||0)}</span></div>
+                          </div>
+                      </div>`;
+                  // popular select
+                  const opt = document.createElement('option');
+                  opt.value = c.id ?? c.idColaborador ?? '';
+                  opt.textContent = c.nomeColaborador;
+                  select.appendChild(opt);
+              });
+              // restaurar seleção anterior
+              if (valorSelecionadoAnterior) select.value = valorSelecionadoAnterior;
+              atualizarRelogioModificacao();
+          } catch (e) { console.error(e); }
+      }
+
+      async function carregarRanking() {
+          try {
+              const response = await fetch(`${API_URL}ranking-top3`);
+              const ranking = await response.json();
+              const lista = document.getElementById("lista-ranking");
+              lista.innerHTML = "";
+              if (ranking.length === 0) { 
+                  lista.innerHTML = '<li class="ranking-item" style="color:var(--text-muted)">Sem dados</li>'; 
+                  return; 
+              }
+              ranking.forEach(r => {
+                  lista.innerHTML += `<li class="ranking-item"><span>${r.posicao}º - ${r.nomeColaborador}</span><span style="color: var(--success)">${r.totalRecuperado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></li>`;
+              });
+          } catch (e) { console.error(e); }
+      }
+
+      async function salvarLancamento(event) {
+          event.preventDefault();
+          const id = document.getElementById("select-colaborador").value;
+          const semana = document.getElementById("select-semana").value;
+          const valor = parseFloat(document.getElementById("input-valor").value);
+          try {
+              const response = await fetch(`${API_URL}${id}/lançar-recuperacao?semana=${semana}`, {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(valor)
+              });
+              if (response.ok) { 
+                  document.getElementById("form-lancamento").reset(); 
+                  carregarDadosGerais(); 
+                  carregarRanking(); 
+              }
+          } catch (e) { console.error(e); }
+      }
+  </script>
+</body>
+</html>
+
