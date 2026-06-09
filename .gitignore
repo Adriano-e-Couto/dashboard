@@ -1,2 +1,16 @@
+# === Arquivos de Configuração Local e Senhas ===
+appsettings.Development.json
 .env
+
+# === Banco de Dados ===
 *.sql
+
+# === Arquivos de Compilação do .NET (Obrigatório) ===
+bin/
+obj/
+
+# === Ferramentas de Desenvolvimento e Cache ===
+.vs/
+.vscode/
+*.user
+*.suo
