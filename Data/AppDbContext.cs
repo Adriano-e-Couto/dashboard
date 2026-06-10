@@ -20,8 +20,9 @@ public class AppDbContext : DbContext
             new ColaboradorMeta { Id = 2, NomeColaborador = "DAVI DE OLIVEIRA MELO", MetaS1 = 6000, MetaS2 = 6000, MetaS3 = 6000, MetaS4 = 6000, RecuperadoS1 = 3752 },
             new ColaboradorMeta { Id = 3, NomeColaborador = "GUILHERME NASCIMENTO", MetaS1 = 6000, MetaS2 = 6000, MetaS3 = 6000, MetaS4 = 6000, RecuperadoS1 = 7308 },
             new ColaboradorMeta { Id = 4, NomeColaborador = "Ana Luisa", MetaS1 = 6000, MetaS2 = 6000, MetaS3 = 6000, MetaS4 = 6000, RecuperadoS1 = 3666 },
-            new ColaboradorMeta { Id = 5, NomeColaborador = "PAMELLA PEREIRA", MetaS1 = 6000, MetaS2 = 6000, MetaS3 = 6000, MetaS4 = 6000, RecuperadoS1 = 1079 },
+            new ColaboradorMeta { Id = 5, NomeColaborador = "GUILHERME SOARES", MetaS1 = 6000, MetaS2 = 6000, MetaS3 = 6000, MetaS4 = 6000, RecuperadoS1 = 1079 },
             new ColaboradorMeta { Id = 6, NomeColaborador = "VICTORIA", MetaS1 = 6000, MetaS2 = 6000, MetaS3 = 6000, MetaS4 = 6000, RecuperadoS1 = 2111 }
+            
         );
     }
 }
