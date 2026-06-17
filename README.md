@@ -10,18 +10,29 @@ Sistema web desenvolvido para acompanhamento de metas e desempenho da equipe de 
 - Ranking de cobradores
 - Gráficos de desempenho
 - Tema Dark Mode
+- **API REST** completa em .NET
+- **Banco de dados** MySQL integrado
+- **Autenticação JWT** (em andamento)
 
 ## Tecnologias
 
-- React
-- Vite
+### Backend
+- **.NET 9**
+- Entity Framework Core + Pomelo (MySQL)
+- JWT Bearer Authentication
+- Arquitetura com Controllers e DTOs
+
+### Frontend
+- **React 19**
+- **Vite**
 - TailwindCSS
-- Recharts
-- Lucide React
+- Axios para consumo da API
 
 ## Futuras Implementações
-
-- API REST
-- Banco de dados
+ Autenticação completa com JWT + Proteção de rotas
+ Cadastro e gerenciamento de usuários
+ Gráficos avançados com Recharts
+ Relatórios em PDF
+ Deploy (Backend + Frontend)
 - Autenticação
 - Relatórios PDF
