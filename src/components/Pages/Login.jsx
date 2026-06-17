@@ -1,60 +1,77 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import api from '../../services/api';
 
-function Login({ onLogin }) {
-  const [nome, setNome] = useState("");
-  const [senha, setSenha] = useState("");
-// Provisório
-  const pessoas = [
-    { id: 1, nome: "João" },
-    { id: 2, nome: "Maria" },
-    { id: 3, nome: "Pedro" },
-  ];
+function Login() {
+    const [colaboradores, setColaboradores] = useState([]);
+    const [selectedId, setSelectedId] = useState('');
+    const [senha, setSenha] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    // Busca os colaboradores ao carregar a tela
+    useEffect(() => {
+        api.get('/usuarios/colaboradores')   // ← Mudei para o controller que você criou
+            .then(res => {
+                setColaboradores(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Erro ao carregar colaboradores", err);
+                setError("Erro ao carregar lista de colaboradores");
+                setLoading(false);
+            });
+    }, []);
 
-    const usuario = pessoas.find((p) => p.nome === nome);
+    const handleLogin = (e) => {
+        e.preventDefault();
+        if (!selectedId) {
+            alert("Selecione uma pessoa!");
+            return;
+        }
+        console.log("Tentativa de Login - ID:", selectedId, "Senha:", senha);
+        // TODO: Chamar endpoint de autenticação real
+        alert("Login simulado com sucesso! (implementar JWT depois)");
+    };
 
-    if (usuario && senha === "123456") {
-      onLogin({
-        nome: usuario.nome,
-        cargo: "Financeiro",
-        email: `${usuario.nome.toLowerCase()}@teste.com`,
-      });
-    } else {
-      alert("Login inválido");
-    }
-  };
+    if (loading) return <p>Carregando colaboradores...</p>;
+    if (error) return <p style={{color: 'red'}}>{error}</p>;
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <select
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
-        className=" p-3 mb-4 border rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
-      >
-        <option value="">Selecione uma pessoa</option>
+    return (
+        <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
+            <h2>Login - Dashboard de Cobrança</h2>
+            <form onSubmit={handleLogin}>
+                <select 
+                    value={selectedId} 
+                    onChange={(e) => setSelectedId(e.target.value)}
+                    required
+                    style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+                >
+                    <option value="">Selecione uma pessoa</option>
+                    {colaboradores.map(colab => (
+                        <option key={colab.id} value={colab.id}>
+                            {colab.nome}
+                        </option>
+                    ))}
+                </select>
 
-        {pessoas.map((pessoa) => (
-          <option key={pessoa.id} value={pessoa.nome}>
-            {pessoa.nome}
-          </option>
-        ))}
-      </select>
+                <input 
+                    type="password" 
+                    placeholder="Senha" 
+                    value={senha}
+                    onChange={(e) => setSenha(e.target.value)}
+                    required 
+                    style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+                />
 
-      <input
-        type="password"
-        placeholder="Senha"
-        value={senha}
-        onChange={(e) => setSenha(e.target.value)}
-        className="p-3  border rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white ml-4"
-      />
-
-      <button type="submit"className="  rounded-lg bg-blue-500 text-white hover:bg-blue-600 ml-4 px-4 py-2">
-        Entrar
-      </button>
-    </form>
-  );
+                <button 
+                    type="submit"
+                    style={{ width: '100%', padding: '12px', background: '#6366f1', color: 'white', border: 'none', borderRadius: '6px' }}
+                >
+                    Entrar
+                </button>
+            </form>
+        </div>
+    );
 }
 
-export default Login;
+export default Login;   // ← ESSA LINHA ESTAVA FALTANDO!

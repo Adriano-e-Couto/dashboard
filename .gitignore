@@ -1,24 +1,31 @@
-# === Arquivos com Senhas ===
+# === PASTAS PRINCIPAIS A IGNORAR ===
+Backend/                    # ← Ignora toda a pasta Backend (inclui .env e settings)
+
+# === Arquivos de Configuração e Senhas ===
 appsettings.Development.json
 appsettings.Production.json
 .env
-appsettings.json
-
-# === .NET ===
-bin/
-obj/
-*.user
-*.suo
-*.sln.user
+.env.local
+appsettings.json.example
 
 # === Front-end ===
 node_modules/
 dist/
-*.log
+dist-ssr/
+*.local
 
-# === Outros ===
+# === .NET (caso algo escape) ===
+bin/
+obj/
+*.user
+*.suo
+
+# === Logs e Temporários ===
+*.log
+logs/
+
+# === Editor ===
 .vscode/
 .vs/
+.idea/
 .DS_Store
-*.bak
-*.sql
