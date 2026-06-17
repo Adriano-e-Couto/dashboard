@@ -20,33 +20,27 @@ const menuItems = [
     active: true,
     badge: "New"
   },
-  // {
-  //   id: "users",
-  //   icon: Users,
-  //   label: "Cadastro",
-  //   active: false,
-  //   submenu: [
-  //     { id: "all-users", label: "Usuários" },
-  //     { id: "admins", label: "Administradores" }
-  //   ]
-  // },
+  
   {
   id: "goals",
   icon: Target,
   label: "Metas"
   },
+
   {
     id: "settings",
     icon: Settings,
     label: "Settings",
     active: false
   },
+
   {
     id: "documents",
     icon: FileText,
     label: "Documents",
     active: false
   },
+  
   {
   id: "login",
   icon: Users,

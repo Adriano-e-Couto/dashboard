@@ -81,23 +81,7 @@ function Header({onToggleSidebar, darkMode, setDarkMode , user})
             </div>
           </div>
 
-            {/* {user && (
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <p className="font-semibold text-sm">
-                    {user.nome}
-                  </p>
-
-                  <p className="text-xs text-gray-500">
-                    {user.cargo}
-                  </p>
-                </div>
-
-                <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                  {user.nome.charAt(0)}
-                </div>
-              </div>
-)} */}
+           
 
           <div className="flex items-center space-x-4">
 
